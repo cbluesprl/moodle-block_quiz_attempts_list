@@ -22,8 +22,6 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-require_once($CFG->dirroot . '/course/lib.php');
-
 /**
  *  attempts_list block renderer on course.
  *
@@ -43,7 +41,7 @@ class block_quiz_attempts_list extends block_base {
     /**
      * @return bool[]
      */
-    function applicable_formats() {
+    public function applicable_formats() {
         return ['course-view' => true];
     }
 
@@ -52,8 +50,8 @@ class block_quiz_attempts_list extends block_base {
      * @throws dml_exception
      * @throws moodle_exception
      */
-    function get_content() {
-        global $DB, $USER;
+    public function get_content() {
+        global $CFG, $DB, $USER;
 
         if ($this->content !== null) {
             return $this->content;
@@ -61,6 +59,8 @@ class block_quiz_attempts_list extends block_base {
         if (empty($this->instance)) {
             return $this->content;
         }
+
+        require_once($CFG->dirroot . '/course/lib.php');
 
         $this->content = new stdClass();
         $this->content->text = html_writer::tag('p', get_string('attempts_list_empty', 'block_quiz_attempts_list'));
@@ -74,34 +74,34 @@ class block_quiz_attempts_list extends block_base {
             return $this->content;
         }
 
-        $quiz_module = $DB->get_record('modules', ['name' => 'quiz']);
-        if (empty($quiz_module)) {
+        $quizmodule = $DB->get_record('modules', ['name' => 'quiz']);
+        if (empty($quizmodule)) {
             return $this->content;
         }
 
-        $quiz_ids = [];
+        $quizids = [];
         foreach (get_fast_modinfo($this->page->course->id)->cms as $cm) {
-            if ($cm->module === $quiz_module->id && $cm->uservisible === true) {
-                $quiz_ids[] = $cm->instance;
+            if ($cm->module === $quizmodule->id && $cm->uservisible === true) {
+                $quizids[] = $cm->instance;
             }
         }
-        if (empty($quiz_ids)) {
+        if (empty($quizids)) {
             return $this->content;
         }
 
         $quiz = [];
 
-        [$quiz_ids_sql, $params] = $DB->get_in_or_equal($quiz_ids);
+        [$quizidssql, $params] = $DB->get_in_or_equal($quizids);
         $params[] = $USER->id;
         $rs = $DB->get_recordset_sql(
-            "SELECT 
+            "SELECT
                 q.id AS quiz_id, q.name AS quiz_name,
                 qa.id AS attempt_id, qa.attempt AS attempt_attempt, qa.timefinish AS attempt_timefinish,
                 qa.sumgrades AS grade_grade, gi.grademax AS grade_max
             FROM {quiz} q
             JOIN {quiz_attempts} qa ON qa.quiz = q.id
             JOIN {grade_items} gi ON gi.iteminstance = q.id AND gi.itemtype = 'mod' AND gi.itemmodule = 'quiz'
-            WHERE q.id $quiz_ids_sql AND qa.userid = ? AND qa.state = 'finished' AND qa.preview = 0
+            WHERE q.id $quizidssql AND qa.userid = ? AND qa.state = 'finished' AND qa.preview = 0
             ORDER BY qa.timefinish DESC",
             $params
         );
@@ -115,7 +115,8 @@ class block_quiz_attempts_list extends block_base {
                 $quiz[$r->quiz_id]->attempts[$r->attempt_id] = new stdClass();
                 $quiz[$r->quiz_id]->attempts[$r->attempt_id]->id = $r->attempt_id;
                 $quiz[$r->quiz_id]->attempts[$r->attempt_id]->attempt = $r->attempt_attempt;
-                $quiz[$r->quiz_id]->attempts[$r->attempt_id]->date = userdate($r->attempt_timefinish, get_string("strftimedatetime"));
+                $quiz[$r->quiz_id]->attempts[$r->attempt_id]->date =
+                    userdate($r->attempt_timefinish, get_string("strftimedatetime"));
                 $quiz[$r->quiz_id]->attempts[$r->attempt_id]->grade =
                     number_format((float) $r->grade_grade, 2) .
                     ' / ' .

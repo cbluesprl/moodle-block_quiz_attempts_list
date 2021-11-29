@@ -25,7 +25,7 @@
 defined('MOODLE_INTERNAL') || die();
 
 $plugin->version = 2021112900;
-$plugin->requires = 2020061500; // Moodle 3.9
+$plugin->requires = 2020061500; // Moodle 3.9.
 $plugin->maturity = MATURITY_STABLE;
 $plugin->release = '1.1';
 $plugin->component = 'block_quiz_attempts_list';
