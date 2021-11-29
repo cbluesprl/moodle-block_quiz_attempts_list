@@ -34,8 +34,6 @@ require_once($CFG->dirroot . '/course/lib.php');
 class block_quiz_attempts_list extends block_base {
 
     /**
-     * The name of the block in the list of blocks.
-     *
      * @throws coding_exception
      */
     public function init() {
@@ -43,8 +41,6 @@ class block_quiz_attempts_list extends block_base {
     }
 
     /**
-     * Where the format is applicable.
-     *
      * @return bool[]
      */
     function applicable_formats() {
@@ -94,6 +90,9 @@ class block_quiz_attempts_list extends block_base {
         }
 
         $quiz = [];
+
+        [$quiz_ids_sql, $params] = $DB->get_in_or_equal($quiz_ids);
+        $params[] = $USER->id;
         $rs = $DB->get_recordset_sql(
             "SELECT 
                 q.id AS quiz_id, q.name AS quiz_name,
@@ -102,11 +101,10 @@ class block_quiz_attempts_list extends block_base {
             FROM {quiz} q
             JOIN {quiz_attempts} qa ON qa.quiz = q.id
             JOIN {grade_items} gi ON gi.iteminstance = q.id AND gi.itemtype = 'mod' AND gi.itemmodule = 'quiz'
-            WHERE q.id IN (" . implode(',', $quiz_ids) . ") AND qa.userid = :user_id AND qa.state = 'finished' AND qa.preview = 0
+            WHERE q.id $quiz_ids_sql AND qa.userid = ? AND qa.state = 'finished' AND qa.preview = 0
             ORDER BY qa.timefinish DESC",
-            ['user_id' => $USER->id, 'course_id' => $this->page->course->id]
+            $params
         );
-
         foreach ($rs as $r) {
             if (empty($quiz[$r->quiz_id])) {
                 $quiz[$r->quiz_id] = new stdClass();
@@ -132,23 +130,5 @@ class block_quiz_attempts_list extends block_base {
         }
 
         return $this->content;
-    }
-
-    /**
-     * Display the header.
-     *
-     * @return false
-     */
-    function hide_header() {
-        return false;
-    }
-
-    /**
-     * Allow multiple instance in a same course FALSE.
-     *
-     * @return false
-     */
-    function instance_allow_multiple() {
-        return false;
     }
 }

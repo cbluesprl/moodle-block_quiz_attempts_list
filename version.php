@@ -24,9 +24,11 @@
 
 defined('MOODLE_INTERNAL') || die();
 
-$plugin->version = 2021092000;
+$plugin->version = 2021112900;
 $plugin->requires = 2020061500; // Moodle 3.9
 $plugin->maturity = MATURITY_STABLE;
-$plugin->release = '1.0';
+$plugin->release = '1.1';
 $plugin->component = 'block_quiz_attempts_list';
-$plugin->dependencies = ['quiz_export' => 2021110201];
+$plugin->dependencies = [
+    'quiz_export' => 2021110201
+];

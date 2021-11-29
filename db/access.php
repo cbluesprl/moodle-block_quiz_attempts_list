@@ -15,8 +15,6 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- *  Capabilities for this block.
- *
  * @package    block_quiz_attempts_list
  * @date       20/09/2021
  * @author     rdelvaux@cblue.be

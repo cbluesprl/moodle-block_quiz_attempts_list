@@ -24,15 +24,6 @@
 
 defined('MOODLE_INTERNAL') || die;
 
-/**
- * display_attempts block renderer.
- *
- * @package    block_quiz_attempts_list
- * @date       20/09/2021
- * @author     rdelvaux@cblue.be
- * @copyright  2021, CBlue SPRL, support@cblue.be
- * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
- */
 class block_quiz_attempts_list_renderer extends plugin_renderer_base {
 
     /**
@@ -65,5 +56,4 @@ class block_quiz_attempts_list_renderer extends plugin_renderer_base {
 
         return $output;
     }
-
 }

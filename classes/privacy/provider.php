@@ -16,16 +16,27 @@
 
 /**
  * @package    block_quiz_attempts_list
- * @date       20/09/2021
- * @author     rdelvaux@cblue.be
+ * @date       29/11/2021
+ * @author     olivier@cblue.be
  * @copyright  2021, CBlue SPRL, support@cblue.be
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-$string['pluginname'] = 'Liste des tentatives des quiz';
-$string['attempts_list_title'] = 'Tentatives de quiz réalisées récemment';
-$string['attempts_list_empty'] = 'Aucune tentative.';
-$string['attempt'] = 'Tentative n°{$a->attempt} - le {$a->date} ({$a->grade})';
-$string['quiz_attempts_list:addinstance'] = 'Ajouter un bloc Liste des tentatives des quiz.';
-$string['quiz_attempts_list:myaddinstance'] = 'Ajouter un bloc Liste des tentatives des quiz au tableau de bord.';
-$string['privacy:metadata'] = 'Le plugin Liste des tentatives des quiz ne stocke aucune information personnelle.';
+namespace block\quiz_attempts_list;
+
+use core_privacy\local\metadata\null_provider;
+
+defined('MOODLE_INTERNAL') || die();
+
+class provider implements null_provider {
+
+    /**
+     * Get the language string identifier with the component's language
+     * file to explain why this plugin stores no data.
+     *
+     * @return  string
+     */
+    public static function get_reason() : string {
+        return 'privacy:metadata';
+    }
+}
