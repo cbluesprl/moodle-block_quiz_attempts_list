@@ -5,12 +5,12 @@ Quiz attempts list
 blocks/quiz_attempts_list
 
 ## Version
-2021092000
+2021112900 (v1.1)
 
 ## Description
-This plugin allows you to list a student's last attempts at a course so that they can retrieve them in PDF format.
-For the generation of the PDF, the plugin redirects to the plugin https://github.com/cbluesprl/moodle-quiz_export.
-This plugin is required to install this one.
+This block is to be added to one or more courses and allows a user to list their own attempts at the quizzes in a course. Each attempt is clickable and allows the user's attempt to be downloaded in PDF format.
+
+This block depends on the QuizExport plugin (https://moodle.org/plugins/quiz_export) to generate the PDFs, so this plugin must be installed in order to install this block on your Moodle.
 
 ## Parameters
 None.
@@ -20,7 +20,7 @@ None.
 - block/quiz_attempts_list:addinstance
 
 ## Dependencies
-- https://github.com/cbluesprl/moodle-quiz_export.
+- https://moodle.org/plugins/quiz_export
 
 ## Documentation
 None.
